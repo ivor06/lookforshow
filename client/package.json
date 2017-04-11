@@ -1,0 +1,25 @@
+{
+  "name": "lookforshow-client",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@types/react": "^15.0.21",
+    "@types/react-dom": "^0.14.23",
+    "@types/webpack": "^2.2.14",
+    "awesome-typescript-loader": "^3.1.2",
+    "extract-text-webpack-plugin": "^2.0.0",
+    "node-sass": "^4.5.0",
+    "sass-loader": "^6.0.0",
+    "typescript": "^2.2.2",
+    "webpack": "^2.3.3"
+  },
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.4",
+    "react-router": "^2.0.4"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/webpack -p",
+    "watch": "node_modules/.bin/webpack --config webpack.config.dev.js --watch"
+  }
+}
