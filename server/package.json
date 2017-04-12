@@ -1,0 +1,15 @@
+{
+  "name": "lookforshow-server",
+  "version": "0.0.1",
+  "devDependencies": {},
+  "dependencies": {
+    "koa": "^2.2.0",
+    "koa-body": "^1.6.0",
+    "koa-compress": "^2.0.0",
+    "koa-router": "^7.1.1",
+    "koa-static": "^3.0.0"
+  },
+  "scripts": {
+    "start": "node ./dist/server/app.js"
+  }
+}
