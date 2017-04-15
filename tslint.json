@@ -8,7 +8,7 @@
     "label-position": true,
     "max-line-length": [
       true,
-      140
+      200
     ],
     "member-access": false,
     "member-ordering": [
@@ -35,11 +35,13 @@
     "no-reference": false,
     "no-require-imports": true,
     "no-string-literal": false,
+    "no-trailing-whitespace": false,
     "no-unreachable": true,
     "no-unused-expression": true,
     "no-unused-variable": false,
     "no-var-requires": true,
     "no-var-keyword": true,
+    "object-literal-key-quotes": false,
     "object-literal-sort-keys": false,
     "one-line": [
       true,
