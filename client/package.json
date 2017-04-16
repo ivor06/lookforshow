@@ -13,12 +13,19 @@
     "webpack": "^2.3.3"
   },
   "dependencies": {
+    "axios": "^0.16.1",
+    "bootstrap": "^3.3.6",
+    "css-to-react-native": "^2.0.3",
+    "izitoast": "^1.1.1",
+    "jsonschema": "^1.1.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.4",
-    "react-router": "^2.0.4"
+    "react-router": "^2.8.1",
+    "redux-thunk": "^2.0.1"
   },
   "scripts": {
+    "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --reporter spec testSetup.js \"src/**/*.test.js\"",
     "build": "node_modules/.bin/webpack -p",
     "watch": "node_modules/.bin/webpack --config webpack.config.dev.js --watch"
   }
