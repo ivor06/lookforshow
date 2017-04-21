@@ -3,11 +3,17 @@
   "version": "0.0.1",
   "devDependencies": {},
   "dependencies": {
+    "bcryptjs": "^2.4.0",
+    "jsonwebtoken": "^7.2.1",
     "koa": "^2.2.0",
     "koa-body": "^1.6.0",
+    "koa-bodyparser": "^4.2.0",
     "koa-compress": "^2.0.0",
     "koa-router": "^7.1.1",
-    "koa-static": "^3.0.0"
+    "koa-static": "^3.0.0",
+    "mongodb": "^2.2.19",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "scripts": {
     "start": "node ./dist/server/app.js"

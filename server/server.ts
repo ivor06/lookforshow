@@ -1,8 +1,14 @@
 import * as Koa from "koa";
 import * as serve from "koa-static";
+import * as bodyParser from "koa-bodyparser";
 import * as compress from "koa-compress";
 import * as https from "https";
 import {Z_SYNC_FLUSH} from "zlib";
+
+import {SERVER} from "./config/config";
+import {routes, allowedMethods} from "./routes/index";
+import error from "./middleware/error";
+import redirect from "./middleware/redirect";
 
 export {
     Server
@@ -11,7 +17,6 @@ export {
 class Server {
     app: Koa;
     server: https.Server;
-    io: SocketIO.Server;
 
     static  bootstrap(): Server {
         return new Server();
@@ -26,9 +31,14 @@ class Server {
             flush: Z_SYNC_FLUSH
         }));
 
-        this.app.use(serve(__dirname.substring(0, __dirname.lastIndexOf("\\")) + "\\..\\..\\client\\dist"));
+        this.app.use(bodyParser());
+        this.app.use(error);
+        this.app.use(serve(SERVER.PATH_STATIC));
+        this.app.use(routes());
+        this.app.use(allowedMethods());
+        this.app.use(redirect);
 
-        this.server = this.app.listen(3000, "127.0.0.1", () =>
+        this.server = this.app.listen(SERVER.PORT, SERVER.HOST_NAME, () =>
             console.log("app listen on", this.server.address().address + ":" + this.server.address().port));
     }
 

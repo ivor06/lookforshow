@@ -1,12 +1,11 @@
 import * as Router from "koa-router";
-import * as KoaBody from "koa-body";
 
-import {register} from "../../handlers/auth";
+import {localRegister} from "../../middleware/auth";
 
 const localRouter = new Router();
 
 localRouter
-    .post("/register", KoaBody(), register);
+    .post("/register", localRegister);
 
 const
     localRoutes = () => localRouter.routes(),
