@@ -52,4 +52,10 @@ describe("Testing util.js", () => {
 
         expect(result).toEqual(expectedResult);
     });
+    it("isContainsValue", () => {
+        expect(util.isContainsValue([1, 2, 3], 2)).toEqual(true);
+        expect(util.isContainsValue([1, 3], 2)).toEqual(false);
+        expect(util.isContainsValue({a: 1, b: 2}, 2)).toEqual(true);
+        expect(util.isContainsValue({a: 1, b: 3}, 2)).toEqual(false);
+    });
 });

@@ -4,9 +4,10 @@ class BaseError extends Error {
     title?: string;
     message: string;
 
-    constructor(title?: string, message?: string) {
-        super(message);
-        this.title = title;
+    constructor(message, title?: string) {
+        super();
+        if (title)
+            this.title = title;
         this.message = message;
     }
 

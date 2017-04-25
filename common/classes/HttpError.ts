@@ -6,9 +6,11 @@ export {
 
 class HttpError extends BaseError {
     status: number;
+    message: string;
+    title?: string;
 
     constructor(statusCode: number, title?: string, message?: string) {
-        super(title, message);
+        super(message, title);
         this.status = statusCode;
     }
 

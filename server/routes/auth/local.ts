@@ -1,11 +1,14 @@
 import * as Router from "koa-router";
 
-import {localRegister} from "../../middleware/auth";
+import {localRegister, localLogin, localToken, localLogout} from "../../middleware/auth";
 
 const localRouter = new Router();
 
 localRouter
-    .post("/register", localRegister);
+    .post("/register", localRegister)
+    .post("/login", localLogin)
+    .get("/token", localToken)
+    .get("/logout", localLogout);
 
 const
     localRoutes = () => localRouter.routes(),

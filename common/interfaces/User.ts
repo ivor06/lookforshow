@@ -1,17 +1,22 @@
+import {HashBoolean} from "./baseTypes";
 export {
     UserInterface,
     Organization,
     Camera,
     Visit,
-    ProfileLocal
+    ProfileLocal,
+    Login,
+    ORG_KIND
 }
 
 interface UserInterface {
     id?: string;
     isOnline?: boolean;
-    roles?: string;
+    timezone?: number;
+    roles?: HashBoolean;
     local?: ProfileLocal;
-    orgList?: Organization[];
+    org?: Organization;
+    getName?: () => string;
 }
 
 interface ProfileLocal {
@@ -25,6 +30,11 @@ interface ProfileLocal {
     language?: string;
 }
 
+interface Login {
+    email?: string;
+    password?: string;
+}
+
 interface Organization {
     id: string;
     kind: ORG_KIND;
@@ -32,22 +42,23 @@ interface Organization {
     country: string;
     city: string;
     address: string;
-    zip: number;
-    phoneList?: string[];
+    zip: string;
+    phone?: string;
     isNeedSendPaperInvoice: boolean;
     seatAmount?: number;
-    operatingTime?: Date[];
-    cameraList?: Camera[];
-    ageList?: AGE_RESTRICTION[];
-    isUserResponsible: boolean;
+    operatingTimeOpen?: number;
+    operatingTimeClose?: number;
+    camera?: Camera;
+    ageRestriction: AGE_RESTRICTION;
+    photo?: string;
+    tags?: HashBoolean;
     about?: string;
 }
 
 interface Camera {
-    isInside: boolean;
-    hasSound: boolean;
-    lastScreenShot: string;
-    kind?: string;
+    hasSound?: boolean;
+    location?: CAMERA_LOCATION;
+    lastScreenShot?: string;
     resolution?: number[];
 }
 
@@ -57,7 +68,6 @@ interface Visit {
     userAgent?: string;
     geo?: Geo;
     connectTime?: Date;
-    disconnectTime?: Date;
 }
 
 interface Geo {
@@ -74,10 +84,14 @@ const enum ORG_KIND {
     BAR, CAFE, CLUB, RESTAURANT, OTHER
 }
 
+const enum CAMERA_LOCATION {
+    INSIDE, STREET
+}
+
 const enum AGE_RESTRICTION {
-    "12+" = 12,
-    "14+" = 14,
-    "16+" = 16,
-    "18+" = 18,
-    "21+" = 21
+    "12+",
+    "14+",
+    "16+",
+    "18+",
+    "21+"
 }
