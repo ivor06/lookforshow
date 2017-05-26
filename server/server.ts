@@ -8,6 +8,7 @@ import {Z_SYNC_FLUSH} from "zlib";
 import {SERVER} from "./config/config";
 import {routes, allowedMethods} from "./routes/index";
 import error from "./middleware/error";
+import log from "./middleware/log";
 import redirect from "./middleware/redirect";
 
 export {
@@ -18,21 +19,21 @@ class Server {
     app: Koa;
     server: https.Server;
 
-    static  bootstrap(): Server {
+    static bootstrap(): Server {
         return new Server();
     }
 
     constructor() {
         this.app = new Koa();
 
+        this.app.use(error);
+        this.app.use(log);
+        this.app.use(bodyParser());
         this.app.use(compress({
             filter: content_type => /(text|javascript)/i.test(content_type),
             threshold: 2048,
             flush: Z_SYNC_FLUSH
         }));
-
-        this.app.use(bodyParser());
-        this.app.use(error);
         this.app.use(serve(SERVER.PATH_STATIC));
         this.app.use(routes());
         this.app.use(allowedMethods());
