@@ -2,6 +2,7 @@ import {HashObject} from "./interfaces/baseTypes";
 
 const TYPES = {
     STRING: "string",
+    BOOLEAN: "boolean",
     NUMBER: "number",
     ARRAY: "array",
     OBJECT: "object",
@@ -20,8 +21,10 @@ export {
     onError,
     isNumber,
     isString,
+    isBoolean,
     isObject,
     isContainsValue,
+    arrayToHash,
     promiseSeries,
     resolvedPromise,
     rejectedPromise,
@@ -79,7 +82,14 @@ function removeObjectKeys<T>(obj: T, fieldList: string[]): T {
         fieldList.forEach((field: string) => delete obj[field]);
     return obj;
 }
-
+/**
+ * Filter object' keys specified in array
+ * @param {!(Object)} obj Filtered object
+ * @param {!String[]} fieldList Array of keys
+ * @return {Object}
+ *
+ * @example filterObjectKeys({a: 1, b: 2}, ["a"]); // {a: 1}
+ */
 function filterObjectKeys<T>(obj: T, fieldList: string[]): T {
     if ((typeof obj === TYPES.OBJECT) && fieldList.length) {
         const result = {};
@@ -100,6 +110,24 @@ function removeUndefined<T>(obj: T): T {
             removeUndefined(value);
     });
     return obj;
+}
+
+/**
+ * Filter object' keys specified in array
+ * @param {!(Object[])} arr Filtered object
+ * @param {!String} keyField Key of array' item
+ * @param {Boolean[]} needRemoveKeyField Need remove key from array' item?
+ * @return {Object}
+ *
+ * @example arrayToHash([{a: "abc", b: 2}, {a: "bcd", b: 4}], "a"); // {abc: {a: "abc", b: 2}, bcd: {a: "bcd", b: 4}}
+ * @example arrayToHash([{a: "abc", b: 2}, {a: "bcd", b: 4}], "a", true); // {abc: {b: 2}, bcd: {b: 4}}
+ */
+function arrayToHash<T>(arr: T[], keyField: string, needRemoveKeyField?: boolean): HashObject<T> {
+    if (!arr || !arr.length)
+        return {};
+    const resultObj = {};
+    arr.forEach(item => resultObj[item[keyField]] = needRemoveKeyField ? removeObjectKeys(item, [keyField]) : item);
+    return resultObj;
 }
 
 function displayObject(obj) {
@@ -129,7 +157,7 @@ function isNumber(value: any): boolean {
 }
 
 function isBoolean(value: any): boolean {
-    return typeof value === TYPES.STRING || value instanceof String;
+    return typeof value === TYPES.BOOLEAN || value instanceof Boolean;
 }
 
 function isString(value: any): boolean {
@@ -167,7 +195,7 @@ function rejectedPromise<T>(value: T): Promise<T> {
     return new Promise((resolve, reject) => reject(value));
 }
 
-function cloneObject<T>(obj: HashObject<T>): HashObject<T> {
+function cloneObject<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj));
 }
 

@@ -1,4 +1,3 @@
-// import expect from "expect";
 const expect = require("expect");
 
 const util = require("./util.ts");
@@ -52,10 +51,25 @@ describe("Testing util.js", () => {
 
         expect(result).toEqual(expectedResult);
     });
+    it("filterObjectKeys", () => {
+        expect(util.filterObjectKeys({a: 1, b: 2}, ["a"])).toEqual({a: 1});
+        expect(util.filterObjectKeys({a: 1, b: 2, c: {d: 4, e: 5}}, ["b", "c"])).toEqual({b: 2, c: {d: 4, e: 5}});
+    });
+    it("removeObjectKeys", () => {
+        expect(util.removeObjectKeys({a: 1, b: 2}, ["a"])).toEqual({b: 2});
+        expect(util.removeObjectKeys({a: 1, b: 2, c: {d: 4, e: 5}}, ["b", "c"])).toEqual({a: 1});
+    });
     it("isContainsValue", () => {
         expect(util.isContainsValue([1, 2, 3], 2)).toEqual(true);
         expect(util.isContainsValue([1, 3], 2)).toEqual(false);
         expect(util.isContainsValue({a: 1, b: 2}, 2)).toEqual(true);
         expect(util.isContainsValue({a: 1, b: 3}, 2)).toEqual(false);
+    });
+    it("arrayToHash", () => {
+        expect(util.arrayToHash([{a: "abc", b: 2}, {a: "bcd", b: 4}], "a")).toEqual({
+            abc: {a: "abc", b: 2},
+            bcd: {a: "bcd", b: 4}
+        });
+        expect(util.arrayToHash([{a: "abc", b: 2}, {a: "bcd", b: 4}], "a", true)).toEqual({abc: {b: 2}, bcd: {b: 4}});
     });
 });
