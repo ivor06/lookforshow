@@ -7,6 +7,7 @@ import InputText from "./InputText/InputText";
 import InputNumber from "./InputNumber/InputNumber";
 import InputSelect from "./InputSelect/InputSelect";
 import InputCheckBox from "./InputCheckBox/InputCheckBox";
+import UserSearchItem from "./UserSearchItem/UserSearchItem";
 
 export {
     Home,
@@ -17,5 +18,6 @@ export {
     InputText,
     InputNumber,
     InputSelect,
-    InputCheckBox
+    InputCheckBox,
+    UserSearchItem
 };
