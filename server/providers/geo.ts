@@ -1,7 +1,7 @@
 import {Collection, ObjectID} from "mongodb";
 
 import {collections, connectDb, replaceId} from "./db";
-import {isEmptyObject} from "../../common/util";
+import {isEmptyObject, isString} from "../../common/util";
 import {Country} from "../../common/interfaces/Country";
 import {City} from "../../common/interfaces/City";
 import {HashObject} from "../../common/interfaces/baseTypes";
@@ -9,7 +9,7 @@ import {Province} from "../../common/interfaces/Province";
 
 export {
     findCountryById,
-    findCityById,
+    findCityByIdList,
 
     findCountryByISO,
     findProvinceByISO,
@@ -59,22 +59,6 @@ connectDb().then(() => {
     cities = collections["cities"];
 });
 
-function findCityById(id: string): Promise<City> {
-    return citiesCache[id]
-        ? Promise.resolve(citiesCache[id])
-        : cities
-            .find({_id: new ObjectID(id)})
-            .project(Object.assign({"_id": 0}, CITY_FIELDS))
-            .limit(1)
-            .next()
-            .then(city => {
-                if (isEmptyObject(city))
-                    return null;
-                citiesCache[id] = city;
-                return city;
-            });
-}
-
 function findCountryById(id: string): Promise<Country> {
     return countries
         .find({_id: new ObjectID(id)})
@@ -93,6 +77,19 @@ function findCountryByISO(ISO: string): Promise<Country> {
         .then(country => isEmptyObject(country) ? null : country);
 }
 
+function findAllCountries(): Promise<Country[]> {
+    return countryCache
+        ? Promise.resolve(countryCache)
+        : countries
+            .find({})
+            .project(COUNTRY_LIST_FIELDS)
+            .toArray()
+            .then(countryList => {
+                countryCache = countryList;
+                return countryList;
+            });
+}
+
 function findProvinceByISO(countryISO: string, ISO: string): Promise<Province> {
     return provinces
         .find({countryISO, ISO})
@@ -100,6 +97,37 @@ function findProvinceByISO(countryISO: string, ISO: string): Promise<Province> {
         .limit(1)
         .next()
         .then(province => isEmptyObject(province) ? null : province);
+}
+
+function findCityByIdList(idList: string[] | string): Promise<City[]> {
+    if (isString(idList))
+        idList = [idList as string];
+
+    const
+        idsNeedData = {},
+        cityList = (idList as string[]).map((id, index) => {
+            const cityLocal = citiesCache[id] || null;
+            if (!cityLocal)
+                idsNeedData[id] = index;
+            return cityLocal;
+        });
+
+    return (isEmptyObject(idsNeedData))
+        ? Promise.resolve(cityList)
+        : cities
+            .find({_id: {$in: Object.keys(idsNeedData).map(id => new ObjectID(id))}})
+            .project(CITY_FIELDS)
+            .map(replaceId)
+            .toArray()
+            .then(cityListFromDb => {
+                if (cityListFromDb.length > 0) {
+                    cityListFromDb.forEach(city => {
+                        citiesCache[city.id] = city;
+                        cityList[idsNeedData[city.id]] = city;
+                    });
+                }
+                return cityList;
+            });
 }
 
 function findCitiesByCountry(countryISO: string): Promise<City[]> {
@@ -142,19 +170,6 @@ function findCitiesByCountryAndProvince(countryISO: string, provinceISO: string)
                     citiesByCountryAndProvinceISOCache[countryISO] = {};
                 citiesByCountryAndProvinceISOCache[countryISO][provinceISO] = cityList;
                 return cityList;
-            });
-}
-
-function findAllCountries(): Promise<Country[]> {
-    return countryCache
-        ? Promise.resolve(countryCache)
-        : countries
-            .find({})
-            .project(COUNTRY_LIST_FIELDS)
-            .toArray()
-            .then(countryList => {
-                countryCache = countryList;
-                return countryList;
             });
 }
 
