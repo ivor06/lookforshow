@@ -12,16 +12,24 @@ interface UserFormProps {
     defaultKindOption?: SelectOption;
     orgAgeRestrictionList?: SelectOption[];
     defaultAgeRestrictionOption?: SelectOption;
+
     countryList?: SelectOption[];
     defaultCountryOption?: SelectOption;
+
+    provinceList?: SelectOption[];
+    defaultProvinceOption?: SelectOption;
+
     cityList?: SelectOption[];
     defaultCityOption?: SelectOption;
+
     cameraLocationList: SelectOption[];
     defaultCameraLocationOption: SelectOption;
     errors?: HashString;
     isValid?: boolean;
     isSaving?: boolean;
     onChange?: (event?) => void;
+    onScreenShot?: (event?) => void;
     onBlur?: (event?) => void;
+    onAddStream?: (event?) => void;
     onSave?: (event?: any) => any;
 }

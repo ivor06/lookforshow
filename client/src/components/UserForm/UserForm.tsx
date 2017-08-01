@@ -4,10 +4,10 @@ import {InputCamera, InputText, InputNumber, InputSelect, InputCheckBox} from '.
 import {UserFormProps} from './types';
 
 const UserForm = ({
-                      user, fields, errors, isValid, isSaving, onChange, onBlur, onSave,
-                      orgKindList, defaultKindOption, countryList, defaultCountryOption,
-                      cityList, defaultCityOption, cameraLocationList, defaultCameraLocationOption,
-                      orgAgeRestrictionList, defaultAgeRestrictionOption
+                      user, fields, errors, isValid, isSaving, onChange, onScreenShot, onBlur, onSave, onAddStream,
+                      orgKindList, defaultKindOption, countryList, defaultCountryOption, provinceList,
+                      defaultProvinceOption, cityList, defaultCityOption, cameraLocationList,
+                      defaultCameraLocationOption, orgAgeRestrictionList, defaultAgeRestrictionOption
                   }: UserFormProps): JSX.Element => (
     <div className="user-form padding-top-navbar">
         <h1 className="text-center">New user</h1>
@@ -52,13 +52,6 @@ const UserForm = ({
                             onChange={onChange}
                             onBlur={onBlur}
                             error={errors[fields.localLastName]}/>
-                        <InputText
-                            name={fields.localTaxNumber}
-                            label="Tax number*"
-                            value={user.local.taxNumber}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            error={errors[fields.localTaxNumber]}/>
                     </fieldset>
                     <h3 className="text-center">Organization</h3>
                     <fieldset className="panel panel-body">
@@ -78,21 +71,29 @@ const UserForm = ({
                             onChange={onChange}
                             error={errors[fields.orgKind]}/>
                         <InputSelect
-                            name={fields.orgCountry}
+                            name={fields.orgCountryISO}
                             label="Country"
-                            value={user.org.country ? user.org.country : defaultCountryOption.value}
+                            value={user.org.countryISO ? user.org.countryISO : defaultCountryOption.value}
                             defaultOption={defaultCountryOption}
                             options={countryList}
                             onChange={onChange}
-                            error={errors[fields.orgCountry]}/>
-                        <InputSelect
-                            name={fields.orgCity}
+                            error={errors[fields.orgCountryISO]}/>
+                        {provinceList && provinceList.length > 0 && <InputSelect
+                            name={fields.orgProvinceISO}
+                            label="Province/State"
+                            value={user.org.provinceISO ? user.org.provinceISO : provinceList[0].value}
+                            defaultOption={defaultProvinceOption ? defaultProvinceOption : provinceList[0]}
+                            options={provinceList}
+                            onChange={onChange}
+                            error={errors[fields.orgProvinceISO]}/>}
+                        {cityList && cityList.length > 0 && <InputSelect
+                            name={fields.orgCityId}
                             label="City"
-                            value={user.org.city ? user.org.city : cityList[0].value}
+                            value={user.org.cityId ? user.org.cityId : cityList[0].value}
                             defaultOption={defaultCityOption ? defaultCityOption : cityList[0]}
                             options={cityList}
                             onChange={onChange}
-                            error={errors[fields.orgCity]}/>
+                            error={errors[fields.orgCityId]}/>}
                         <InputText
                             name={fields.orgAddress}
                             label="Address*"
@@ -146,16 +147,6 @@ const UserForm = ({
                             onChange={onChange}
                             onBlur={onBlur}
                             error={errors[fields.orgOperatingTimeClose]}/>
-                        <InputCamera
-                            name={fields.orgCamera}
-                            label="Camera"
-                            value={user.org.camera}
-                            cameraLocationList={cameraLocationList}
-                            defaultCameraLocationOption={defaultCameraLocationOption}
-                            fields={fields}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            error={errors[fields.orgCamera]}/>
                         <InputSelect
                             name={fields.orgAgeRestriction}
                             label="Age restriction"
@@ -164,6 +155,19 @@ const UserForm = ({
                             options={orgAgeRestrictionList}
                             onChange={onChange}
                             error={errors[fields.orgAgeRestriction]}/>
+                        <InputCamera
+                            name={fields.orgCamera}
+                            label="Public camera"
+                            value={user.org.camera}
+                            cameraLocationList={cameraLocationList}
+                            defaultCameraLocationOption={defaultCameraLocationOption}
+                            fields={fields}
+                            onChange={onChange}
+                            onScreenShot={onScreenShot}
+                            onBlur={onBlur}
+                            onAddStream={onAddStream}
+                            errors={errors}
+                            error={errors[fields.orgCamera]}/>
                     </fieldset>
                 </form>
             </div>
