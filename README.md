@@ -1,2 +1,2 @@
-# lookforshow
-Sharing web-translation service
+# WebRTCHub
+Web-translation service prototype
